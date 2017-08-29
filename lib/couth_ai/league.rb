@@ -1,11 +1,12 @@
 module CouthAI
-  attr_reader :league_key, :league_id, :name, :url, :draft_status, :num_teams,
-    :edit_key, :weekly_deadline, :league_update_timestamp, :scoring_type,
-    :league_type, :renew, :renewed, :short_invitation_url,
-    :allow_add_to_dl_extra_pos, :is_pro_league, :is_cash_league, :current_week,
-    :start_week, :start_date, :end_week, :end_date, :game_code, :season
-
   class League
+    attr_reader :league_key, :league_id, :name, :url, :draft_status,
+      :num_teams, :edit_key, :weekly_deadline, :league_update_timestamp,
+      :scoring_type, :league_type, :renew, :renewed, :short_invitation_url,
+      :allow_add_to_dl_extra_pos, :is_pro_league, :is_cash_league,
+      :current_week, :start_week, :start_date, :end_week, :end_date,
+      :game_code, :season
+
     def initialize(attribs = {})
       @league_key = attribs['league_key']
       @league_id = attribs['league_id']

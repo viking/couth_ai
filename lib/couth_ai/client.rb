@@ -63,6 +63,31 @@ module CouthAI
       leagues
     end
 
+    def teams(fantasy_game, league)
+      response = get_response("./users;use_login=1/games;game_keys=#{fantasy_game.game_key}/leagues;league_keys=#{league.league_key}/teams")
+      doc = REXML::Document.new(response.body)
+      teams = []
+      REXML::XPath.each(doc, "//team") do |team_elt|
+        attribs = {}
+        team_elt.elements.each do |elt|
+          value =
+            case elt.name
+            when "team_id", "division_id", "faab_balance", "number_of_moves", "number_of_trades", "auction_budget_total"
+              elt.text.to_i
+            when "is_owned_by_current_login", "has_draft_grade"
+              elt.text == "1"
+            when "team_logos", "roster_adds", "managers"
+              nil
+            else
+              elt.text
+            end
+          attribs[elt.name] = value
+        end
+        teams << Team.new(attribs)
+      end
+      teams
+    end
+
     private
 
     def client
@@ -106,10 +131,9 @@ module CouthAI
 
     def get_response(path)
       if token.expired?
-        puts "Refreshing token..."
-        p token
         token.refresh!(token_options)
-        p token
+        @session = Session.from_hash(token.to_hash)
+        @session.save!
       end
       token.get(API_URI.merge(path))
     end

@@ -9,4 +9,5 @@ module CouthAI
   autoload :Client,      "couth_ai/client"
   autoload :FantasyGame, "couth_ai/fantasy_game"
   autoload :League,      "couth_ai/league"
+  autoload :Team,        "couth_ai/team"
 end

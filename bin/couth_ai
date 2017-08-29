@@ -26,3 +26,7 @@ p nfl
 leagues = client.leagues(nfl)
 league = leagues.first
 p league
+
+teams = client.teams(nfl, league)
+team = teams.first
+p team
