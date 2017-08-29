@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'couth_ai'
 require 'highline'
+require 'pp'
 
 cli = HighLine.new
 consumer_key = cli.ask("Consumer key:    ")
@@ -9,7 +10,6 @@ client = CouthAI::Client.new(consumer_key, consumer_secret)
 
 begin
   fantasy_games = client.fantasy_games
-  p fantasy_games
 rescue CouthAI::Client::AppTokenRequired
   app_token = cli.ask("Application token (leave blank if unknown): ")
   if app_token.empty?
@@ -20,3 +20,9 @@ rescue CouthAI::Client::AppTokenRequired
   client.app_token = app_token
   retry
 end
+
+nfl = fantasy_games.find { |fg| fg.code == "nfl" && !fg.is_game_over }
+p nfl
+leagues = client.leagues(nfl)
+league = leagues.first
+p league

@@ -18,15 +18,49 @@ module CouthAI
     def fantasy_games
       response = get_response("./users;use_login=1/games")
       doc = REXML::Document.new(response.body)
-      fantasy_games = [];
+      fantasy_games = []
       REXML::XPath.each(doc, "//game") do |game_elt|
         attribs = {}
         game_elt.elements.each do |elt|
-          attribs[elt.name] = elt.text
+          value =
+            case elt.name
+            when "game_id", "game_key", "season"
+              elt.text.to_i
+            when "is_game_over", "is_offseason", "is_registration_over"
+              elt.text == "1"
+            else
+              elt.text
+            end
+          attribs[elt.name] = value
         end
         fantasy_games << FantasyGame.new(attribs)
       end
       fantasy_games
+    end
+
+    def leagues(fantasy_game)
+      response = get_response("./users;use_login=1/games;game_keys=#{fantasy_game.game_key}/leagues")
+      doc = REXML::Document.new(response.body)
+      leagues = []
+      REXML::XPath.each(doc, "//league") do |league_elt|
+        attribs = {}
+        league_elt.elements.each do |elt|
+          value =
+            case elt.name
+            when "num_teams", "current_week", "start_week", "end_week", "season"
+              elt.text.to_i
+            when "allow_add_to_dl_extra_pos", "is_pro_league", "is_cash_league"
+              elt.text == "1"
+            when "start_date", "end_date"
+              Date.strptime(elt.text, "%Y-%m-%d")
+            else
+              elt.text
+            end
+          attribs[elt.name] = value
+        end
+        leagues << League.new(attribs)
+      end
+      leagues
     end
 
     private
@@ -71,6 +105,12 @@ module CouthAI
     end
 
     def get_response(path)
+      if token.expired?
+        puts "Refreshing token..."
+        p token
+        token.refresh!(token_options)
+        p token
+      end
       token.get(API_URI.merge(path))
     end
   end
