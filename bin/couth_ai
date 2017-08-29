@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'couth_ai'
+require 'highline'
+
+cli = HighLine.new
+consumer_key = cli.ask("Consumer key:    ")
+consumer_secret = cli.ask("Consumer secret: ") { |q| q.echo = false }
+client = CouthAI::Client.new(consumer_key, consumer_secret)
+
+begin
+  fantasy_games = client.fantasy_games
+  p fantasy_games
+rescue CouthAI::Client::AppTokenRequired
+  app_token = cli.ask("Application token (leave blank if unknown): ")
+  if app_token.empty?
+    puts "Visit the following URL for the application token:"
+    puts client.authorize_url
+    app_token = cli.ask("Application token: ")
+  end
+  client.app_token = app_token
+  retry
+end

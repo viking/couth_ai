@@ -5,12 +5,11 @@ require "couth_ai/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "couth_ai"
-  spec.version       = CouthAi::VERSION
+  spec.version       = CouthAI::VERSION
   spec.authors       = ["Jeremy Stephens"]
   spec.email         = ["jeremy.f.stephens@vanderbilt.edu"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{Run a fantasy football team automatically}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -30,6 +29,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "oauth2", "~> 1.4"
+  spec.add_dependency "highline", "~> 1.7"
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "rake", "~> 10.0"
 end

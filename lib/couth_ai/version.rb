@@ -1,3 +1,3 @@
-module CouthAi
+module CouthAI
   VERSION = "0.1.0"
 end
