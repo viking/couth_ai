@@ -38,7 +38,11 @@ module CouthAI
         Player.new(attribs)
       end
 
-      attr_reader :player_key, :player_id, :name, :editorial_player_key, :editorial_team_key, :editorial_team_full_name, :editorial_team_abbr, :bye_weeks, :uniform_number, :display_position, :headshot, :image_url, :is_undroppable, :position_type, :eligible_positions, :has_player_notes, :selected_position, :is_editable
+      attr_reader :player_key, :player_id, :name, :editorial_player_key,
+        :editorial_team_key, :editorial_team_full_name, :editorial_team_abbr,
+        :bye_weeks, :uniform_number, :display_position, :headshot, :image_url,
+        :is_undroppable, :position_type, :eligible_positions,
+        :has_player_notes, :selected_position, :is_editable
 
       def initialize(attribs = {})
         @player_key = attribs["player_key"]

@@ -30,10 +30,21 @@ module CouthAI
                     case greatgrandchild_elt.name
                     when "stat_id", "sort_order"
                       greatgrandchild_elt.text.to_i
-                    when "enabled"
+                    when "enabled", "is_only_display_stat", "is_excluded_from_display"
                       greatgrandchild_elt.text == "1"
                     when "stat_position_types"
-                      greatgrandchild_elt.elements.collect("stat_position_type/position_type") { |e| e.text }
+                      greatgrandchild_elt.elements.collect do |g3child_elt|
+                        g3child_elt.elements.inject(nil, {}) do |hash, g4child_elt|
+                          hash[g4child_elt.name] =
+                            case g4child_elt.name
+                            when "position_type"
+                              g4child_elt.text
+                            when "is_only_display_stat"
+                              g4child_elt.text == "1"
+                            end
+                          hash
+                        end
+                      end
                     else
                       greatgrandchild_elt.text
                     end

@@ -4,35 +4,29 @@ require 'highline'
 require 'pp'
 
 cli = HighLine.new
-consumer_key = ENV["COUTH_AI_KEY"] || cli.ask("Consumer key:    ")
-consumer_secret = ENV["COUTH_AI_SECRET"] || cli.ask("Consumer secret: ") { |q| q.echo = false }
-client = CouthAI::Yahoo::Client.new(consumer_key, consumer_secret)
+
+# yahoo client
+yahoo_consumer_key = ENV["COUTH_AI_YAHOO_KEY"] || cli.ask("Yahoo consumer key: ")
+yahoo_consumer_secret = ENV["COUTH_AI_YAHOO_SECRET"] || cli.ask("Yahoo consumer secret: ") { |q| q.echo = false }
+yahoo = CouthAI::Yahoo::Client.new(yahoo_consumer_key, yahoo_consumer_secret)
+
+# nerd client
+nerd_key = ENV["COUTH_AI_NERD_KEY"] || cli.ask("Nerd key: ")
+nerd = CouthAI::Nerd::Client.new(nerd_key)
+
+# manager
+league_id = ENV["COUTH_AI_LEAGUE_ID"] || cli.ask("League id: ")
+manager = CouthAI::Manager.new(yahoo, nerd, league_id)
 
 begin
-  fantasy_games = client.fantasy_games
+  pp manager.projections
 rescue CouthAI::Yahoo::Client::AppTokenRequired
-  app_token = cli.ask("Application token (leave blank if unknown): ")
+  app_token = cli.ask("Yahoo token (leave blank if unknown): ")
   if app_token.empty?
-    puts "Visit the following URL for the application token:"
-    puts client.authorize_url
-    app_token = cli.ask("Application token: ")
+    puts "Visit the following URL for the Yahoo token:"
+    puts yahoo.authorize_url
+    app_token = cli.ask("Yahoo token: ")
   end
-  client.app_token = app_token
+  yahoo.app_token = app_token
   retry
 end
-
-nfl = fantasy_games.find { |fg| fg.code == "nfl" && !fg.is_game_over }
-p nfl
-leagues = client.leagues(nfl)
-league = leagues.first
-p league
-
-settings = client.settings(nfl, league)
-p settings
-
-teams = client.teams(nfl, league)
-team = teams.first
-p team
-
-roster = client.roster(team)
-p roster
