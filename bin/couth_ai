@@ -27,6 +27,9 @@ leagues = client.leagues(nfl)
 league = leagues.first
 p league
 
+settings = client.settings(nfl, league)
+p settings
+
 teams = client.teams(nfl, league)
 team = teams.first
 p team

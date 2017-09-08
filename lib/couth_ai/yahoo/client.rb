@@ -36,6 +36,13 @@ module CouthAI
         leagues
       end
 
+      def settings(fantasy_game, league)
+        response = get_response("./users;use_login=1/games;game_keys=#{fantasy_game.game_key}/leagues;league_keys=#{league.league_key}/settings")
+        doc = REXML::Document.new(response.body)
+        settings_elt = REXML::XPath.first(doc, "//settings")
+        Settings.from_xml(settings_elt)
+      end
+
       def teams(fantasy_game, league)
         response = get_response("./users;use_login=1/games;game_keys=#{fantasy_game.game_key}/leagues;league_keys=#{league.league_key}/teams")
         doc = REXML::Document.new(response.body)

@@ -7,5 +7,6 @@ module CouthAI
     autoload :Team,        "couth_ai/yahoo/team"
     autoload :Roster,      "couth_ai/yahoo/roster"
     autoload :Player,      "couth_ai/yahoo/player"
+    autoload :Settings,    "couth_ai/yahoo/settings"
   end
 end
