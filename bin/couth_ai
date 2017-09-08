@@ -4,13 +4,13 @@ require 'highline'
 require 'pp'
 
 cli = HighLine.new
-consumer_key = cli.ask("Consumer key:    ")
-consumer_secret = cli.ask("Consumer secret: ") { |q| q.echo = false }
-client = CouthAI::Client.new(consumer_key, consumer_secret)
+consumer_key = ENV["COUTH_AI_KEY"] || cli.ask("Consumer key:    ")
+consumer_secret = ENV["COUTH_AI_SECRET"] || cli.ask("Consumer secret: ") { |q| q.echo = false }
+client = CouthAI::Yahoo::Client.new(consumer_key, consumer_secret)
 
 begin
   fantasy_games = client.fantasy_games
-rescue CouthAI::Client::AppTokenRequired
+rescue CouthAI::Yahoo::Client::AppTokenRequired
   app_token = cli.ask("Application token (leave blank if unknown): ")
   if app_token.empty?
     puts "Visit the following URL for the application token:"
@@ -30,3 +30,6 @@ p league
 teams = client.teams(nfl, league)
 team = teams.first
 p team
+
+roster = client.roster(team)
+p roster
