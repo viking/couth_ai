@@ -5,7 +5,7 @@ module CouthAI
 
       API_URI = URI.parse("https://www.fantasyfootballnerd.com/service/")
 
-      def initialize(api_key, cache_path = "/tmp/couth_ai_nerd")
+      def initialize(api_key, cache_path = "/tmp/couth_ai/nerd")
         @api_key = api_key
         @cache_path = cache_path
       end

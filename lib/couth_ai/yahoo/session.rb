@@ -29,7 +29,8 @@ module CouthAI
         }
       end
 
-      def save!(filename = "/tmp/couth_ai_oauth.json")
+      def save!(filename = "/tmp/couth_ai/yahoo.json")
+        FileUtils.mkdir_p(File.dirname(filename))
         File.open(filename, 'w') { |f| f.write(JSON.generate(to_h)) }
       end
     end

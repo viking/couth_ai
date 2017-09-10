@@ -12,7 +12,14 @@ module CouthAI
       roster.players.inject({}) do |result, player|
         name = player.name["full"]
         projs = weekly_projections(player.display_position, week)
-        proj = projs.find { |p| p.display_name == name }
+        proj =
+          projs.find do |p|
+            proj_name = p.display_name
+            if player.display_position == "DEF"
+              proj_name = proj_name.split(" ").first
+            end
+            proj_name == name
+          end
         result[name] =
           if proj
             calculator.projection(proj)

@@ -8,11 +8,13 @@ cli = HighLine.new
 # yahoo client
 yahoo_consumer_key = ENV["COUTH_AI_YAHOO_KEY"] || cli.ask("Yahoo consumer key: ")
 yahoo_consumer_secret = ENV["COUTH_AI_YAHOO_SECRET"] || cli.ask("Yahoo consumer secret: ") { |q| q.echo = false }
-yahoo = CouthAI::Yahoo::Client.new(yahoo_consumer_key, yahoo_consumer_secret)
+yahoo_session_filename = ENV["COUTH_AI_YAHOO_SESSION"] || "/tmp/couth_ai/yahoo.json"
+yahoo = CouthAI::Yahoo::Client.new(yahoo_consumer_key, yahoo_consumer_secret, yahoo_session_filename)
 
 # nerd client
 nerd_key = ENV["COUTH_AI_NERD_KEY"] || cli.ask("Nerd key: ")
-nerd = CouthAI::Nerd::Client.new(nerd_key)
+nerd_cache = ENV["COUTH_AI_NERD_CACHE"] || "/tmp/couth_ai/nerd"
+nerd = CouthAI::Nerd::Client.new(nerd_key, nerd_cache)
 
 # manager
 league_id = ENV["COUTH_AI_LEAGUE_ID"] || cli.ask("League id: ")

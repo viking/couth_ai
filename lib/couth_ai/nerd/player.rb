@@ -23,7 +23,7 @@ module CouthAI
         :pass_yds, :pass_td, :pass_int, :rush_att, :rush_yds, :rush_td,
         :fumbles_lost, :receptions, :rec_yds, :rec_td, :fg, :fg_att, :xp,
         :def_int, :def_fr, :def_ff, :def_sack, :def_td, :def_ret_td,
-        :def_safety, :def_yds_allowed, :display_name, :team
+        :def_safety, :def_pa, :def_yds_allowed, :display_name, :team
 
       def initialize(attribs = {})
         @week = attribs["week"]
@@ -51,6 +51,7 @@ module CouthAI
         @def_td = attribs["def_td"]
         @def_ret_td = attribs["def_ret_td"]
         @def_safety = attribs["def_safety"]
+        @def_pa = attribs["def_pa"]
         @def_yds_allowed = attribs["def_yds_allowed"]
         @display_name = attribs["display_name"]
         @team = attribs["team"]

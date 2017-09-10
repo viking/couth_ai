@@ -6,7 +6,7 @@ module CouthAI
       API_URI = URI.parse("https://fantasysports.yahooapis.com/fantasy/v2/")
       attr_writer :app_token
 
-      def initialize(consumer_key, consumer_secret, session_filename = "/tmp/couth_ai_oauth.json")
+      def initialize(consumer_key, consumer_secret, session_filename = "/tmp/couth_ai/yahoo.json")
         @consumer_key = consumer_key
         @consumer_secret = consumer_secret
         @session_filename = session_filename

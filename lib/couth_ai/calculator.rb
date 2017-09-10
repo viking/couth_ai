@@ -89,7 +89,7 @@ module CouthAI
           end
 
         if def_pa_stat_name
-          stat = @settings.stat_categories.find { |name| name == def_pa_stat_name }
+          stat = @settings.stat_categories.find { |s| s["name"] == def_pa_stat_name }
           result += stat["modifier"]
         end
       end
