@@ -43,6 +43,7 @@ module CouthAI
         :bye_weeks, :uniform_number, :display_position, :headshot, :image_url,
         :is_undroppable, :position_type, :eligible_positions,
         :has_player_notes, :selected_position, :is_editable
+      attr_writer :projected_points
 
       def initialize(attribs = {})
         @player_key = attribs["player_key"]
@@ -63,6 +64,14 @@ module CouthAI
         @has_player_notes = attribs["has_player_notes"]
         @selected_position = attribs["selected_position"]
         @is_editable = attribs["is_editable"]
+      end
+
+      def projected_points
+        @projected_points || 0.0
+      end
+
+      def inspect
+        "#<#{self.class.name} name=#{@name&.fetch("full", nil).inspect} eligible_positions=#{@eligible_positions.inspect} selected_position=#{@selected_position&.fetch("position", nil).inspect} ...>"
       end
     end
   end

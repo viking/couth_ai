@@ -28,6 +28,37 @@ module CouthAI
         @is_editable = attribs["is_editable"]
         @players = attribs["players"]
       end
+
+      def eligible_players_for(position)
+        @players.select { |player| player.eligible_positions.include?(position) }
+      end
+
+      def set_starters_by_id(position, ids)
+        @players.each do |player|
+          current_position = player.selected_position["position"]
+          if current_position == position
+            if !ids.include?(player.player_id)
+              player.selected_position["position"] = "BN"
+            end
+          elsif ids.include?(player.player_id)
+            player.selected_position["position"] = position
+          end
+        end
+      end
+
+      def to_update_xml
+        result = %{<?xml version="1.0"?><fantasy_content><roster>}
+        result << %{<coverage_type>#{@coverage_type}</coverage_type>}
+        result << %{<week>#{@week}</week>}
+        result << %{<players>}
+        @players.each do |player|
+          result << %{<player>}
+          result << %{<player_key>#{player.player_key}</player_key>}
+          result << %{<position>#{player.selected_position["position"]}</position>}
+          result << %{</player>}
+        end
+        result << %{</players></roster></fantasy_content>}
+      end
     end
   end
 end

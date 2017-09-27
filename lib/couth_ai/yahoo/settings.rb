@@ -13,15 +13,17 @@ module CouthAI
             when "trade_end_date"
               Date.strptime(child_elt.text, "%Y-%m-%d")
             when "roster_positions"
-              child_elt.elements.inject("roster_position/*", {}) do |hash, grandchild_elt|
-                hash[grandchild_elt.name] =
-                  case grandchild_elt.name
-                  when "count"
-                    grandchild_elt.text.to_i
-                  else
-                    grandchild_elt.text
-                  end
-                hash
+              child_elt.elements.collect do |grandchild_elt|
+                grandchild_elt.elements.inject(nil, {}) do |hash, greatgrandchild_elt|
+                  hash[greatgrandchild_elt.name] =
+                    case greatgrandchild_elt.name
+                    when "count"
+                      greatgrandchild_elt.text.to_i
+                    else
+                      greatgrandchild_elt.text
+                    end
+                  hash
+                end
               end
             when "stat_categories"
               child_elt.elements.collect("stats/stat") do |grandchild_elt|

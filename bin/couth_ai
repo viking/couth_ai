@@ -21,7 +21,16 @@ league_id = ENV["COUTH_AI_LEAGUE_ID"] || cli.ask("League id: ")
 manager = CouthAI::Manager.new(yahoo, nerd, league_id)
 
 begin
-  pp manager.projections
+  puts "Before optimizing:"
+  manager.roster.players.each do |player|
+    puts "#{player.name["full"]}, #{player.selected_position["position"]}"
+  end
+  puts "After optimizing:"
+  response = manager.optimize_roster!
+  manager.roster.players.each do |player|
+    puts "#{player.name["full"]}, #{player.selected_position["position"]}: #{player.projected_points}"
+  end
+  pp response
 rescue CouthAI::Yahoo::Client::AppTokenRequired
   app_token = cli.ask("Yahoo token (leave blank if unknown): ")
   if app_token.empty?

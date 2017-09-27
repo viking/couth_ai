@@ -60,6 +60,10 @@ module CouthAI
         Roster.from_xml(roster_elt)
       end
 
+      def update_roster(team, roster)
+        put_response("./team/#{team.team_key}/roster", roster.to_update_xml)
+      end
+
       def players(league, params = {})
         conditions =
           if params.empty? then ""
@@ -116,12 +120,21 @@ module CouthAI
       end
 
       def get_response(path)
+        refresh_token!
+        token.get(API_URI.merge(path))
+      end
+
+      def put_response(path, data)
+        refresh_token!
+        token.put(API_URI.merge(path), body: data, headers: {"Content-Type" => "application/xml"})
+      end
+
+      def refresh_token!
         if token.expired?
           @token = token.refresh!(token_options)
           @session = Session.from_hash(token.to_hash)
           @session.save!
         end
-        token.get(API_URI.merge(path))
       end
     end
   end
