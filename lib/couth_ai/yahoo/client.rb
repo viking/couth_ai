@@ -113,7 +113,7 @@ module CouthAI
             end
             @token = client.auth_code.get_token(@app_token, token_options)
             @session = Session.from_hash(@token.to_hash)
-            @session.save!
+            @session.save!(@session_filename)
           end
         end
         @token
