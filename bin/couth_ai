@@ -1,7 +1,16 @@
 #!/usr/bin/env ruby
 require 'couth_ai'
 require 'highline'
-require 'pp'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]"
+
+  opts.on("-n", "--dry-run", "Don't make any roster changes") do |n|
+    options[:dry_run] = n
+  end
+end.parse!
 
 cli = HighLine.new
 
@@ -21,16 +30,25 @@ league_id = ENV["COUTH_AI_LEAGUE_ID"] || cli.ask("League id: ")
 manager = CouthAI::Manager.new(yahoo, nerd, league_id)
 
 begin
-  puts "Before optimizing:"
-  manager.roster.players.each do |player|
-    puts "#{player.name["full"]}, #{player.selected_position["position"]}"
+  players = manager.roster.players
+  puts "=== Before optimization ==="
+  players.each do |player|
+    puts "#{player.name["full"]}, #{player.selected_position["position"]}: #{player.projected_points}"
   end
-  puts "After optimizing:"
-  response = manager.optimize_roster!
+  puts "=== After optimization ==="
+  response = manager.optimize_roster!(options[:dry_run])
   manager.roster.players.each do |player|
     puts "#{player.name["full"]}, #{player.selected_position["position"]}: #{player.projected_points}"
   end
-  pp response
+  puts "=== Potential pickups ==="
+  manager.potential_pickups.each do |info|
+    puts "Replace %s (%f) with %s (%f)." % [
+      info[:replace].name["full"],
+      info[:replace].projected_points,
+      info[:with].name["full"],
+      info[:with].projected_points
+    ]
+  end
 rescue CouthAI::Yahoo::Client::AppTokenRequired
   app_token = cli.ask("Yahoo token (leave blank if unknown): ")
   if app_token.empty?
